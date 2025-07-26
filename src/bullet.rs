@@ -10,7 +10,7 @@ pub struct Bullet{
 impl Bullet{
     pub fn new(ctx: &mut Context, spawn_pos: [f32; 2]) -> GameResult<Self>{
         let sprite = Image::from_path(ctx, "/bullet.png")?;
-        let pos = [100.0, 100.0];
+        let pos = [spawn_pos[0], spawn_pos[1]];
         let hitbox = Rect::new(spawn_pos[0], spawn_pos[1], sprite.width() as f32, sprite.height() as f32);
         Ok(Self { sprite, pos, hitbox })
     }

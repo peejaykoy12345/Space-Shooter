@@ -1,8 +1,7 @@
-use ggez::{Context, ContextBuilder, GameError, GameResult};
+use ggez::{Context, ContextBuilder, GameResult};
 use ggez::graphics::{self, Color};
 use ggez::event::{self, EventHandler};
-use ggez::input::keyboard::{self, KeyCode};
-
+use ggez::input::keyboard::KeyCode;
 use std::time::Duration;
 
 mod player;
@@ -95,7 +94,7 @@ impl EventHandler for MyGame {
 
         for i in 0..self.meteors.len(){
             if self.player.hitbox.overlaps(&self.meteors[i].hitbox){
-                self.player.health -= 10.0;
+                self.player.take_damage(10.0, now);
             }
         }
 

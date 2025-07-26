@@ -18,7 +18,7 @@ impl Meteor{
         let rand_y: f32 = rng.gen_range(0.0..=screen_size[1]);
 
         let sprite = Image::from_path(ctx, "/meteor.png")?;
-        let pos = [100.0, 100.0];
+        let pos = [rand_x, rand_y];
         let hitbox = Rect::new(rand_x, rand_y, sprite.width() as f32, sprite.height() as f32);
         Ok(Self { sprite, pos, hitbox })
     }
