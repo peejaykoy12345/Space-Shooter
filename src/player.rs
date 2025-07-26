@@ -54,6 +54,8 @@ impl Player{
         self.health -= damage;
         self.health = self.health.clamp(0.0, 100.0);
 
+        self.last_damaged = now;
+        println!("Health: {}, Damage taken: {}", self.health,  damage);
     }
 }
 

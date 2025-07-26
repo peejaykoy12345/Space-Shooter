@@ -48,16 +48,16 @@ impl EventHandler for MyGame {
         let (width, height) = ctx.gfx.drawable_size();
 
         if ctx.keyboard.is_key_pressed(KeyCode::W) {
-            self.player.move_player([0.0, 1.0]);
+            self.player.move_player([0.0, -1.0]);
         }
         if ctx.keyboard.is_key_pressed(KeyCode::S) {
-            self.player.move_player([0.0, -1.0]);
+            self.player.move_player([0.0, 1.0]);
         }
         if ctx.keyboard.is_key_pressed(KeyCode::A) {
             self.player.move_player([-1.0, 0.0]);
         }
         if ctx.keyboard.is_key_pressed(KeyCode::D) {
-            self.player.move_player([-1.0, 0.0]);
+            self.player.move_player([1.0, 0.0]);
         }
         if ctx.keyboard.is_key_just_pressed(KeyCode::Space){
             self.bullets.push(Bullet::new(ctx, self.player.pos)?);
