@@ -1,17 +1,17 @@
-use ggez::graphics::{self, Image, Rect, DrawParam, Canvas, Color};
+use ggez::graphics::{self, Canvas, Color, DrawParam, Image, Rect};
 use ggez::{Context, GameResult};
 
-use rand::rngs::ThreadRng;
 use rand::Rng;
+use rand::rngs::ThreadRng;
 
-pub struct Meteor{
+pub struct Meteor {
     pub sprite: Image,
     pub pos: [f32; 2],
     pub hitbox: Rect,
 }
 
-impl Meteor{
-    pub fn new(ctx: &mut Context, screen_size: [f32; 2]) -> GameResult<Self>{
+impl Meteor {
+    pub fn new(ctx: &mut Context, screen_size: [f32; 2]) -> GameResult<Self> {
         let mut rng: ThreadRng = rand::thread_rng();
 
         let rand_x: f32 = rng.gen_range(0.0..=screen_size[0] - 200.0);
@@ -19,8 +19,17 @@ impl Meteor{
 
         let sprite = Image::from_path(ctx, "/meteor.png")?;
         let pos = [rand_x, rand_y];
-        let hitbox = Rect::new(rand_x, rand_y, sprite.width() as f32, sprite.height() as f32);
-        Ok(Self { sprite, pos, hitbox })
+        let hitbox = Rect::new(
+            rand_x,
+            rand_y,
+            sprite.width() as f32,
+            sprite.height() as f32,
+        );
+        Ok(Self {
+            sprite,
+            pos,
+            hitbox,
+        })
     }
 
     pub fn update_hitbox(&mut self) {
@@ -36,14 +45,14 @@ impl Meteor{
             graphics::DrawMode::stroke(2.0),
             self.hitbox,
             Color::RED,
-        ).unwrap();
+        )
+        .unwrap();
 
         canvas.draw(&hitbox_mesh, DrawParam::default());
     }
 
-    pub fn move_meteor(&mut self){
+    pub fn move_meteor(&mut self) {
         self.pos[1] += 2.0;
         self.update_hitbox();
     }
 }
-

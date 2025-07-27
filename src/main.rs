@@ -1,7 +1,7 @@
-use ggez::{Context, ContextBuilder, GameResult};
-use ggez::graphics::{self, Color};
 use ggez::event::{self, EventHandler};
+use ggez::graphics::{self, Color};
 use ggez::input::keyboard::KeyCode;
+use ggez::{Context, ContextBuilder, GameResult};
 use std::time::Duration;
 
 mod player;
@@ -14,7 +14,9 @@ mod meteor;
 use meteor::Meteor;
 
 fn main() {
+    let resource_dir = std::path::PathBuf::from("./resources");
     let (mut ctx, event_loop) = ContextBuilder::new("space_shooter", "VortexDrags")
+        .add_resource_path(resource_dir)
         .build()
         .expect("aieee, could not create ggez context!");
 
@@ -44,7 +46,7 @@ impl MyGame {
 }
 
 impl EventHandler for MyGame {
-   fn update(&mut self, ctx: &mut Context) -> GameResult {
+    fn update(&mut self, ctx: &mut Context) -> GameResult {
         let (width, height) = ctx.gfx.drawable_size();
 
         let now: Duration = ctx.time.time_since_start();
@@ -61,15 +63,15 @@ impl EventHandler for MyGame {
         if ctx.keyboard.is_key_pressed(KeyCode::D) {
             self.player.move_player([1.0, 0.0]);
         }
-        if ctx.keyboard.is_key_just_pressed(KeyCode::Space){
+        if ctx.keyboard.is_key_just_pressed(KeyCode::Space) {
             let elapsed: Duration = now - self.player.last_used_laser;
-            if elapsed >= Duration::from_millis(400){
+            if elapsed >= Duration::from_millis(400) {
                 self.bullets.push(Bullet::new(ctx, self.player.pos)?);
                 self.player.last_used_laser = now;
             }
         }
 
-        for bullet in &mut self.bullets{
+        for bullet in &mut self.bullets {
             bullet.on_shot();
         }
 
@@ -80,36 +82,37 @@ impl EventHandler for MyGame {
             self.last_meteor_spawn_time = now;
         }
 
-        for meteor in &mut self.meteors{
+        for meteor in &mut self.meteors {
             meteor.move_meteor();
         }
 
         let mut meteors_to_delete: Vec<usize> = vec![];
         let mut lasers_to_delete: Vec<usize> = vec![];
-        for i in 0..self.bullets.len(){
-            for j in 0..self.meteors.len(){
-                if self.bullets[i].hitbox.overlaps(&self.meteors[j].hitbox){
+        for i in 0..self.bullets.len() {
+            for j in 0..self.meteors.len() {
+                if self.bullets[i].hitbox.overlaps(&self.meteors[j].hitbox) {
                     lasers_to_delete.push(i);
                     meteors_to_delete.push(j);
                 }
             }
         }
+
         meteors_to_delete.sort_by(|a, b| b.cmp(a));
-        for meteors in &meteors_to_delete{
-            if meteors < &self.meteors.len(){
+        for meteors in &meteors_to_delete {
+            if meteors < &self.meteors.len() {
                 self.meteors.remove(*meteors);
             }
         }
 
         lasers_to_delete.sort_by(|a, b| b.cmp(a));
-        for lasers in &lasers_to_delete{
-            if lasers < &self.bullets.len(){
+        for lasers in &lasers_to_delete {
+            if lasers < &self.bullets.len() {
                 self.bullets.remove(*lasers);
             }
         }
 
-        for i in 0..self.meteors.len(){
-            if self.player.hitbox.overlaps(&self.meteors[i].hitbox){
+        for i in 0..self.meteors.len() {
+            if self.player.hitbox.overlaps(&self.meteors[i].hitbox) {
                 self.player.take_damage(10.0, now);
             }
         }
@@ -121,11 +124,11 @@ impl EventHandler for MyGame {
         let mut canvas = graphics::Canvas::from_frame(ctx, Color::WHITE);
         self.player.draw(&mut canvas, ctx);
 
-        for meteor in &mut self.meteors{
+        for meteor in &mut self.meteors {
             meteor.draw(&mut canvas, ctx);
         }
 
-        for bullet in &mut self.bullets{
+        for bullet in &mut self.bullets {
             bullet.draw(&mut canvas, ctx);
         }
 
