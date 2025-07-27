@@ -54,7 +54,6 @@ impl Player {
         )
         .unwrap();
 
-        canvas.draw(&hitbox_mesh, DrawParam::default());
     }
 
     pub fn move_player(&mut self, direction: [f32; 2]) -> () {

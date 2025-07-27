@@ -40,7 +40,6 @@ impl Bullet {
         )
         .unwrap();
 
-        canvas.draw(&hitbox_mesh, DrawParam::default());
     }
 
     pub fn on_shot(&mut self) {

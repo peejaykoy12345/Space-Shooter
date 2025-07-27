@@ -97,6 +97,19 @@ impl EventHandler for MyGame {
             }
         }
 
+        for i in 0..self.meteors.len() {
+            if self.player.hitbox.overlaps(&self.meteors[i].hitbox) {
+                self.player.take_damage(10.0, now);
+                if self.player.health <= 0.0{
+                    println!("GAME OVER");
+                    ctx.request_quit();
+                }
+                if !meteors_to_delete.contains(&i){
+                    meteors_to_delete.push(i);
+                }
+            }
+        }
+
         meteors_to_delete.sort_by(|a, b| b.cmp(a));
         for meteors in &meteors_to_delete {
             if meteors < &self.meteors.len() {
@@ -111,12 +124,6 @@ impl EventHandler for MyGame {
             }
         }
 
-        for i in 0..self.meteors.len() {
-            if self.player.hitbox.overlaps(&self.meteors[i].hitbox) {
-                self.player.take_damage(10.0, now);
-            }
-        }
-
         Ok(())
     }
 
@@ -124,11 +131,11 @@ impl EventHandler for MyGame {
         let mut canvas = graphics::Canvas::from_frame(ctx, Color::WHITE);
         self.player.draw(&mut canvas, ctx);
 
-        for meteor in &mut self.meteors {
+        for meteor in &self.meteors {
             meteor.draw(&mut canvas, ctx);
         }
 
-        for bullet in &mut self.bullets {
+        for bullet in &self.bullets {
             bullet.draw(&mut canvas, ctx);
         }
 

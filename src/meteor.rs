@@ -48,7 +48,6 @@ impl Meteor {
         )
         .unwrap();
 
-        canvas.draw(&hitbox_mesh, DrawParam::default());
     }
 
     pub fn move_meteor(&mut self) {
