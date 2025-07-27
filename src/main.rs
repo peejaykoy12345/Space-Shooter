@@ -2,6 +2,7 @@ use ggez::event::{self, EventHandler};
 use ggez::graphics::{self, Color};
 use ggez::input::keyboard::KeyCode;
 use ggez::{Context, ContextBuilder, GameResult};
+use ggez::glam::vec2;
 use std::time::Duration;
 
 mod player;
@@ -51,17 +52,25 @@ impl EventHandler for MyGame {
 
         let now: Duration = ctx.time.time_since_start();
 
+        
+        let mut direction = vec2(0.0, 0.0);
+
         if ctx.keyboard.is_key_pressed(KeyCode::W) {
-            self.player.move_player([0.0, -1.0]);
+            direction.y -= 1.0;
         }
         if ctx.keyboard.is_key_pressed(KeyCode::S) {
-            self.player.move_player([0.0, 1.0]);
+            direction.y += 1.0;
         }
         if ctx.keyboard.is_key_pressed(KeyCode::A) {
-            self.player.move_player([-1.0, 0.0]);
+            direction.x -= 1.0;
         }
         if ctx.keyboard.is_key_pressed(KeyCode::D) {
-            self.player.move_player([1.0, 0.0]);
+            direction.x += 1.0;
+        }
+
+        if direction != vec2(0.0, 0.0) {
+            direction = direction.normalize(); 
+            self.player.move_player([direction.x, direction.y]);
         }
         if ctx.keyboard.is_key_just_pressed(KeyCode::Space) {
             let elapsed: Duration = now - self.player.last_used_laser;
