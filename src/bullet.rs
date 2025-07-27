@@ -34,7 +34,7 @@ impl Bullet{
     }
 
     pub fn on_shot(&mut self){
-        self.pos[1] += 1.0;
+        self.pos[1] -= 5.0;
         self.update_hitbox();
     }
 }

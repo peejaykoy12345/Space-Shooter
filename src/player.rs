@@ -9,8 +9,10 @@ pub struct Player{
     pub hitbox: Rect,
 
     pub health: f32,
+    pub speed: f32,
 
     last_damaged: Duration,
+    pub last_used_laser: Duration,
 }
 
 impl Player{
@@ -19,7 +21,8 @@ impl Player{
         let pos = [100.0, 100.0];
         let hitbox = Rect::new(pos[0], pos[1], sprite.width() as f32, sprite.height() as f32);
         let health: f32 = 100.0;
-        Ok(Self { sprite, pos, hitbox, health, last_damaged: ctx.time.time_since_start() })
+        let speed: f32 = 3.0;
+        Ok(Self { sprite, pos, hitbox, health, speed, last_damaged: ctx.time.time_since_start(), last_used_laser: ctx.time.time_since_start() })
     }
 
     pub fn update_hitbox(&mut self) {
@@ -41,8 +44,8 @@ impl Player{
     }
 
     pub fn move_player(&mut self, direction: [f32; 2]) -> (){
-        self.pos[0] += direction[0];
-        self.pos[1] += direction[1];
+        self.pos[0] += direction[0] * self.speed;
+        self.pos[1] += direction[1] * self.speed;
         self.update_hitbox();
     }
 

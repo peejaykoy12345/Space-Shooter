@@ -14,8 +14,8 @@ impl Meteor{
     pub fn new(ctx: &mut Context, screen_size: [f32; 2]) -> GameResult<Self>{
         let mut rng: ThreadRng = rand::thread_rng();
 
-        let rand_x: f32 = rng.gen_range(0.0..=screen_size[0]);
-        let rand_y: f32 = rng.gen_range(0.0..=screen_size[1]);
+        let rand_x: f32 = rng.gen_range(0.0..=screen_size[0] - 200.0);
+        let rand_y: f32 = rng.gen_range(-500.0..=0.0);
 
         let sprite = Image::from_path(ctx, "/meteor.png")?;
         let pos = [rand_x, rand_y];
@@ -42,7 +42,7 @@ impl Meteor{
     }
 
     pub fn move_meteor(&mut self){
-        self.pos[1] += -1.0;
+        self.pos[1] += 2.0;
         self.update_hitbox();
     }
 }

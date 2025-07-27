@@ -47,6 +47,8 @@ impl EventHandler for MyGame {
    fn update(&mut self, ctx: &mut Context) -> GameResult {
         let (width, height) = ctx.gfx.drawable_size();
 
+        let now: Duration = ctx.time.time_since_start();
+
         if ctx.keyboard.is_key_pressed(KeyCode::W) {
             self.player.move_player([0.0, -1.0]);
         }
@@ -60,14 +62,17 @@ impl EventHandler for MyGame {
             self.player.move_player([1.0, 0.0]);
         }
         if ctx.keyboard.is_key_just_pressed(KeyCode::Space){
-            self.bullets.push(Bullet::new(ctx, self.player.pos)?);
+            let elapsed: Duration = now - self.player.last_used_laser;
+            if elapsed >= Duration::from_millis(400){
+                self.bullets.push(Bullet::new(ctx, self.player.pos)?);
+                self.player.last_used_laser = now;
+            }
         }
 
         for bullet in &mut self.bullets{
             bullet.on_shot();
         }
 
-        let now: Duration = ctx.time.time_since_start();
         let elapsed: Duration = now - self.last_meteor_spawn_time;
 
         if elapsed >= Duration::from_secs(1) {
@@ -80,16 +85,27 @@ impl EventHandler for MyGame {
         }
 
         let mut meteors_to_delete: Vec<usize> = vec![];
+        let mut lasers_to_delete: Vec<usize> = vec![];
         for i in 0..self.bullets.len(){
             for j in 0..self.meteors.len(){
                 if self.bullets[i].hitbox.overlaps(&self.meteors[j].hitbox){
+                    lasers_to_delete.push(i);
                     meteors_to_delete.push(j);
                 }
             }
         }
         meteors_to_delete.sort_by(|a, b| b.cmp(a));
         for meteors in &meteors_to_delete{
-            self.meteors.remove(*meteors);
+            if meteors < &self.meteors.len(){
+                self.meteors.remove(*meteors);
+            }
+        }
+
+        lasers_to_delete.sort_by(|a, b| b.cmp(a));
+        for lasers in &lasers_to_delete{
+            if lasers < &self.bullets.len(){
+                self.bullets.remove(*lasers);
+            }
         }
 
         for i in 0..self.meteors.len(){
