@@ -1,6 +1,6 @@
 use std::time::Duration;
 
-use ggez::graphics::{self, Canvas, Color, DrawParam, Image, Rect};
+use ggez::graphics::{Canvas, DrawParam, Image, Rect};
 use ggez::{Context, GameResult};
 
 pub struct Player {
@@ -43,17 +43,8 @@ impl Player {
         self.hitbox.y = self.pos[1];
     }
 
-    pub fn draw(&self, canvas: &mut Canvas, ctx: &mut Context) -> () {
+    pub fn draw(&self, canvas: &mut Canvas, _ctx: &mut Context) -> () {
         canvas.draw(&self.sprite, DrawParam::default().dest(self.pos));
-
-        let hitbox_mesh = graphics::Mesh::new_rectangle(
-            ctx,
-            graphics::DrawMode::stroke(2.0),
-            self.hitbox,
-            Color::RED,
-        )
-        .unwrap();
-
     }
 
     pub fn move_player(&mut self, direction: [f32; 2]) -> () {
